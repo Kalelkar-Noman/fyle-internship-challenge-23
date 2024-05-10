@@ -1,13 +1,23 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>FyleFrontendChallenge</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
-<body>
-  <app-root></app-root>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <title>FyleFrontendChallenge</title>
+    <!-- ====== AOS Animation CSS ====== -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <!-- ====== AOS Animation CSS End ====== -->
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  </head>
+  <body class="bg-gray-900 min-h-screen">
+    <app-root></app-root>
+
+    <!-- ====== AOS Animation Script ====== -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
+    <!-- ====== AOS Animation Script End ====== -->
+  </body>
 </html>

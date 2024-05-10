@@ -1,5 +1,302 @@
-<div class="grid h-screen place-items-center">
-  <div class="font-bold text-3xl">
-    Fyle Internship Challenge
+<!-- ====== Search ====== -->
+<header class="w-full">
+  <div
+    data-aos="fade-up"
+    data-aos-easing="linear"
+    data-aos-duration="600"
+    class="flex flex-col items-center justify-center min-h-40"
+  >
+    <div
+      class="w-full max-w-xl px-4 py-8 rounded-lg shadow-md dark:bg-gray-800"
+    >
+      <form class="flex items-center space-x-4">
+        <input
+          class="flex h-10 w-full border border-input text-sm focus-visible:outline-none flex-1 px-4 py-2 border-none rounded-md focus:ring-2 bg-gray-700 text-gray-200"
+          placeholder="Enter a GitHub UserName"
+          type="text"
+          name="searchUser"
+          [(ngModel)]="searchUser"
+        />
+        <button
+          class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 h-10 px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-blue-600 dark:hover:bg-blue-700"
+          type="submit"
+          (click)="findUser()"
+        >
+          Search
+        </button>
+      </form>
+    </div>
+  </div>
+</header>
+<!-- ====== Search End ====== -->
+
+<!-- ====== Pagination ====== -->
+<div
+  data-aos="fade-up"
+  data-aos-easing="linear"
+  data-aos-duration="800"
+  class="m-8 rounded-lg flex justify-center items-center dark:bg-gray-800"
+>
+  <div class="p-2 dark:border-gray-700 w-full">
+    <nav
+      role="navigation"
+      aria-label="Pagination Navigation"
+      class="flex items-center justify-between"
+    >
+      <div class="flex justify-between items-center flex-1 lg:hidden">
+        <div class="w-10">
+          <button
+            (click)="previousPage()"
+            [disabled]="page == 1"
+            title="Previous"
+            type="button"
+            class="flex items-center justify-center rounded-full relative outline-none hover:bg-gray-500/5 disabled:opacity-70 cursor-pointer text-blue-500 focus:bg-blue-500/10 dark:hover:bg-gray-300/5 w-10 h-10"
+            rel="prev"
+          >
+            <span class="sr-only"> Previous </span>
+
+            <svg
+              class="w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="3"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15 19l-7-7 7-7"
+              ></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2 rtl:space-x-reverse">
+          <select
+            name="perPageRepos"
+            [(ngModel)]="perPageRepos"
+            class="h-8 text-sm px-2 leading-none transition duration-75 border-gray-300 rounded-lg shadow-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-inset focus:ring-blue-500 dark:text-white dark:bg-gray-700 dark:border-gray-600 dark:focus:border-blue-500"
+          >
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+
+          <span class="text-sm font-medium dark:text-white"> per page </span>
+        </div>
+
+        <div class="w-10">
+          <button
+            [disabled]="page >= totalPages"
+            (click)="nextPage()"
+            title="Next"
+            type="button"
+            class="flex items-center justify-center rounded-full relative outline-none hover:bg-gray-500/5 disabled:opacity-70 cursor-pointer text-blue-500 focus:bg-blue-500/10 dark:hover:bg-gray-300/5 w-10 h-10"
+            rel="next"
+          >
+            <span class="sr-only"> Next </span>
+
+            <svg
+              class="w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="3"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 5l7 7-7 7"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="hidden flex-1 items-center lg:grid grid-cols-3">
+        <div class="flex items-center">
+          <div
+            *ngIf="user.repositoryCount"
+            class="pl-2 text-sm font-medium dark:text-white"
+          >
+            Showing {{ pageFrom }} to
+            {{ page == totalPages ? user.repositoryCount : pageTo }} of
+            {{ user.repositoryCount }} results
+          </div>
+        </div>
+
+        <div class="flex items-center justify-center">
+          <div
+            class="flex items-center space-x-2 filament-tables-pagination-records-per-page-selector rtl:space-x-reverse"
+          >
+            <label>
+              <select
+                name="perPageRepos"
+                [(ngModel)]="perPageRepos"
+                (change)="onPerPageRepoChange()"
+                class="h-8 text-sm pr-8 leading-none transition duration-75 border-gray-300 rounded-lg shadow-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-inset focus:ring-blue-500 dark:text-white dark:bg-gray-700 dark:border-gray-600 dark:focus:border-blue-500"
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+
+              <span class="text-sm font-medium dark:text-white">
+                per page
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end">
+          <div class="py-3 border rounded-lg dark:border-gray-600">
+            <ol
+              class="flex items-center text-sm text-gray-500 divide-x rtl:divide-x-reverse divide-gray-300 dark:text-gray-400 dark:divide-gray-600"
+            >
+              <li>
+                <button
+                  type="button"
+                  class="relative flex items-center justify-center font-medium min-w-[2rem] px-1.5 h-8 -my-3 rounded-md outline-none hover:bg-gray-500/5 focus:bg-blue-500/10 focus:ring-2 focus:ring-blue-500 dark:hover:bg-gray-400/5 transition text-blue-600"
+                  aria-label="Previous"
+                  rel="prev"
+                  (click)="previousPage()"
+                  [disabled]="page == 1"
+                >
+                  <svg
+                    class="w-5 h-5 rtl:scale-x-[-1]"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </button>
+              </li>
+
+              <li *ngFor="let pageNumber of getPageNumbers(totalPages)">
+                <button
+                  (click)="goToPage(pageNumber)"
+                  [id]="'pageBtn-' + pageNumber"
+                  type="button"
+                  class="relative flex items-center justify-center font-medium min-w-[2rem] px-1.5 h-8 -my-3 rounded-md outline-none hover:bg-gray-500/5 focus:bg-blue-500/10 focus:ring-2 focus:ring-blue-500 dark:hover:bg-gray-400/5 focus:text-blue-600 transition bg-blue-500/10 text-blue-600 ring-2 ring-blue-500 btn"
+                >
+                  <span>{{ pageNumber }}</span>
+                </button>
+              </li>
+
+              <li>
+                <button
+                  type="button"
+                  class="relative flex items-center justify-center font-medium min-w-[2rem] px-1.5 h-8 -my-3 rounded-md outline-none hover:bg-gray-500/5 focus:bg-blue-500/10 focus:ring-2 focus:ring-blue-500 dark:hover:bg-gray-400/5 transition text-blue-600"
+                  aria-label="Next"
+                  rel="next"
+                  [disabled]="page >= totalPages"
+                  (click)="nextPage()"
+                >
+                  <svg
+                    class="w-5 h-5 rtl:scale-x-[-1]"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </button>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </nav>
   </div>
 </div>
+<!-- ====== Pagination End ====== -->
+
+<!-- ====== Skeleton Loader ====== -->
+<app-skeleton-loader *ngIf="isLoading && searchFound" />
+<!-- ====== Skeleton Loader ====== -->
+
+<!-- ====== User Details ====== -->
+<main *ngIf="!isLoading && searchFound">
+  <div class="max-w-4xl mx-auto p-6 bg-white rounded-lg">
+    <div class="flex flex-col md:flex-row md:items-center md:space-x-6">
+      <span
+        class="relative flex h-full w-40 shrink-0 overflow-hidden rounded-full"
+      >
+        <img
+          class="aspect-square h-full w-full"
+          alt="John Doe"
+          [src]="user.avatar"
+        />
+      </span>
+      <div class="mt-4 md:mt-0">
+        <h1 class="text-2xl font-bold">{{ user.name }}</h1>
+        <p class="text-gray-600">{{ user.bio }}</p>
+        <div class="flex items-center text-gray-600 space-x-1">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="h-4 w-4"
+          >
+            <line x1="2" x2="5" y1="12" y2="12"></line>
+            <line x1="19" x2="22" y1="12" y2="12"></line>
+            <line x1="12" x2="12" y1="2" y2="5"></line>
+            <line x1="12" x2="12" y1="19" y2="22"></line>
+            <circle cx="12" cy="12" r="7"></circle>
+          </svg>
+          <span>{{ user.location }}</span>
+        </div>
+        <a href="#" class="text-blue-600 block mt-1">
+          Twitter: https://twitter.com/{{ user.twitter }}
+        </a>
+        <a href="#" class="text-blue-600 block mt-1">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="h-4 w-4 inline"
+          >
+            <path
+              d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
+            ></path>
+            <path d="M9 18c-4.51 2-5-2-7-2"></path>
+          </svg>
+          https://github.com/{{ user.name }}
+        </a>
+      </div>
+    </div>
+    <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <app-card *ngFor="let item of cardsData; index as i" [cardData]="item" />
+    </div>
+  </div>
+</main>
+<!-- ====== User Details End ====== -->

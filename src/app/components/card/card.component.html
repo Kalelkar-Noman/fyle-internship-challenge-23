@@ -1,0 +1,47 @@
+<div
+  class="rounded-lg border bg-card text-card-foreground shadow-sm w-full"
+  data-v0-t="card"
+>
+  <div class="flex flex-col space-y-1.5 p-6">
+    <h3
+      class="w-full whitespace-nowrap overflow-hidden text-ellipsis text-2xl font-semibold leading-none tracking-tight"
+    >
+      {{ cardData.name }}
+    </h3>
+  </div>
+  <div class="p-6">
+    <p class="w-full whitespace-nowrap overflow-hidden text-ellipsis">
+      {{ cardData.description }}
+    </p>
+    <div class="flex flex-wrap gap-1 mt-2">
+      Topics:
+      <div
+        *ngFor="let topic of cardData.topics"
+        class="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
+      >
+        {{ topic }}
+      </div>
+      <div
+        *ngIf="cardData.topics.length == 0"
+        class="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
+      >
+        No Topic Found
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-1 mt-2">
+      Language:
+      <div
+        class="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
+      >
+        {{ cardData.language }}
+      </div>
+      <div
+        *ngIf="!cardData.language"
+        class="inline-flex w-fit items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
+      >
+        No Language Found
+      </div>
+    </div>
+  </div>
+</div>
